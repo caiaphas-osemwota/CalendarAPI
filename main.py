@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import requests
 import os
 import json
+import datetime
+
 load_dotenv()
 url = os.getenv("copiedURL")
 cal = Calendar(requests.get(url).text) #reads url and translates to text
@@ -22,7 +24,6 @@ sorted_event_list = sorted(event_list, key=lambda event:event['begin_event_time'
 
 total_assignment_time_list = []
 freetime_list = []
-study_time_list = [] 
 for i in range(0,len(sorted_event_list)-1):
     current_event = sorted_event_list[i]
     next_event = sorted_event_list[i+1]
@@ -49,11 +50,34 @@ for i in range(0,len(sorted_event_list)-1):
     freetime = {
         'beginfreetime' : current_event['end_event_time'],
         'endfreetime' : next_event['begin_event_time'],
+        'freetimeduration' : (next_event['begin_event_time'] - current_event['end_event_time'])
     }
-    freetime_gap = (freetime['endfreetime'] - freetime['beginfreetime'])
-    if freetime_gap.total_seconds() < 600:
+    if freetime['freetimeduration'].total_seconds() < 600:
         continue
     freetime_list.append(freetime)
+study_block_list = []
+freetime_index = 0
+freetime_list_copy = [dict(f) for f in freetime_list] #copies and unravels freetime_list
+for assignment in total_assignment_time_list :
+    remaining_study_time = assignment['study_time']
+    while remaining_study_time > 0 and freetime_index < len(freetime_list_copy):
+        block = freetime_list_copy[freetime_index]
+        block_duration = block['freetimeduration'].total_seconds()
+        if block_duration <= 0:
+            freetime_index += 1
+            continue
+        allotted = min(remaining_study_time, block_duration) #picks smaller one of either remaining study time or block duration
+        study_block = {
+            'assignment_name' : assignment['assignment_name'],
+            'studytimestart' : block['beginfreetime'],
+            'studytimeend' : block['beginfreetime'] + datetime.timedelta(seconds = allotted) #sets alloted time to timedelta to add to date object 'endfreetime'
+            }
+        study_block_list.append(study_block)
+        remaining_study_time -= allotted
+        block['beginfreetime'] = study_block['studytimeend']
+        block['freetimeduration'] -= datetime.timedelta(seconds=allotted)
+        if block['freetimeduration'].total_seconds() <= 0:
+            freetime_index += 1
 
 #DayStart = input("What time do you want to start your day? (input as XX:XX)") #change later
 #DayEnd = input("What time do you want to end your day? (input as XX:XX)") #change later
@@ -66,16 +90,23 @@ for i in range(0,len(sorted_event_list)-1):
 
 
 JSON_event_list = [] #look into pulling sorted dictionary list and 
-for event in events :
-    ISOdictionary = {
-        'eventnameJSON' : event.name,
-        'begineventtimeISO' : event.begin.isoformat(),
-        'end_event_timeISO' : event.end.isoformat()
-    }
-    JSON_event_list.append(ISOdictionary)
-sorted_JSON_dict_list = sorted(JSON_event_list, key=lambda event:event['begineventtimeISO'])
+for sorted_event in sorted_event_list:
+    JSON_event_list.append({
+        'event_name_JSON' : sorted_event['event_name'],
+        'begin_event_timeISO' : sorted_event['begin_event_time'].isoformat(),
+        'end_event_timeISO' : sorted_event['end_event_time'].isoformat()
+    })
+JSON_study_block_list = []
+for JSONstudyblock in study_block_list:
+    JSON_study_block_list.append({
+        'assignment_name_JSON' : JSONstudyblock['assignment_name'],
+        'studytimestartISO' : JSONstudyblock['studytimestart'].isoformat(),
+        'studytimeendISO' : JSONstudyblock['studytimeend'].isoformat()
+    })
+with open('study_block_list.json', 'w') as f:
+    Studying_JSON = json.dump(JSON_study_block_list, f, indent=4) # get rid of indent later on (only for readability)
 with open("event_list.json", "w") as f:
-    ClassesJson = json.dump(sorted_JSON_dict_list, f, indent=4) # get rid of indent later on (only for readability)
+    Classes_JSON = json.dump(JSON_event_list, f, indent=4) # get rid of indent later on (only for readability)
 #with open("event_list
 #.json", "r") as f:
 #    jsontolist = json.load(f)

@@ -1,107 +1,107 @@
 [
     {
-        "eventnameJSON": "Workout",
-        "begineventtimeISO": "2026-08-10T14:00:00+00:00",
+        "event_name_JSON": "Workout",
+        "begin_event_timeISO": "2026-08-10T14:00:00+00:00",
         "end_event_timeISO": "2026-08-10T15:00:00+00:00"
     },
     {
-        "eventnameJSON": "Calc 3",
-        "begineventtimeISO": "2026-08-10T20:30:00+00:00",
+        "event_name_JSON": "Calc 3",
+        "begin_event_timeISO": "2026-08-10T20:30:00+00:00",
         "end_event_timeISO": "2026-08-10T21:30:00+00:00"
     },
     {
-        "eventnameJSON": "C Programming",
-        "begineventtimeISO": "2026-08-10T22:00:00+00:00",
+        "event_name_JSON": "C Programming",
+        "begin_event_timeISO": "2026-08-10T22:00:00+00:00",
         "end_event_timeISO": "2026-08-11T00:00:00+00:00"
     },
     {
-        "eventnameJSON": "Corporate Partners",
-        "begineventtimeISO": "2026-08-11T13:30:00+00:00",
+        "event_name_JSON": "Corporate Partners",
+        "begin_event_timeISO": "2026-08-11T13:30:00+00:00",
         "end_event_timeISO": "2026-08-11T15:20:00+00:00"
     },
     {
-        "eventnameJSON": "Workout",
-        "begineventtimeISO": "2026-08-11T15:45:00+00:00",
+        "event_name_JSON": "Workout",
+        "begin_event_timeISO": "2026-08-11T15:45:00+00:00",
         "end_event_timeISO": "2026-08-11T16:45:00+00:00"
     },
     {
-        "eventnameJSON": "Physics 2 Lecture",
-        "begineventtimeISO": "2026-08-11T17:30:00+00:00",
+        "event_name_JSON": "Physics 2 Lecture",
+        "begin_event_timeISO": "2026-08-11T17:30:00+00:00",
         "end_event_timeISO": "2026-08-11T18:30:00+00:00"
     },
     {
-        "eventnameJSON": "Calc 3",
-        "begineventtimeISO": "2026-08-11T20:30:00+00:00",
+        "event_name_JSON": "Calc 3",
+        "begin_event_timeISO": "2026-08-11T20:30:00+00:00",
         "end_event_timeISO": "2026-08-11T21:45:00+00:00"
     },
     {
-        "eventnameJSON": "Physics Lab",
-        "begineventtimeISO": "2026-08-11T22:00:00+00:00",
+        "event_name_JSON": "Physics Lab",
+        "begin_event_timeISO": "2026-08-11T22:00:00+00:00",
         "end_event_timeISO": "2026-08-12T00:00:00+00:00"
     },
     {
-        "eventnameJSON": "Workout",
-        "begineventtimeISO": "2026-08-12T14:00:00+00:00",
+        "event_name_JSON": "Workout",
+        "begin_event_timeISO": "2026-08-12T14:00:00+00:00",
         "end_event_timeISO": "2026-08-12T15:00:00+00:00"
     },
     {
-        "eventnameJSON": "Linear Circuit Analysis",
-        "begineventtimeISO": "2026-08-12T16:00:00+00:00",
+        "event_name_JSON": "Linear Circuit Analysis",
+        "begin_event_timeISO": "2026-08-12T16:00:00+00:00",
         "end_event_timeISO": "2026-08-12T17:15:00+00:00"
     },
     {
-        "eventnameJSON": "Physics 2 Lecture",
-        "begineventtimeISO": "2026-08-12T17:30:00+00:00",
+        "event_name_JSON": "Physics 2 Lecture",
+        "begin_event_timeISO": "2026-08-12T17:30:00+00:00",
         "end_event_timeISO": "2026-08-12T18:30:00+00:00"
     },
     {
-        "eventnameJSON": "Calc 3",
-        "begineventtimeISO": "2026-08-12T20:30:00+00:00",
+        "event_name_JSON": "Calc 3",
+        "begin_event_timeISO": "2026-08-12T20:30:00+00:00",
         "end_event_timeISO": "2026-08-12T21:30:00+00:00"
     },
     {
-        "eventnameJSON": "C Programming",
-        "begineventtimeISO": "2026-08-12T22:00:00+00:00",
+        "event_name_JSON": "C Programming",
+        "begin_event_timeISO": "2026-08-12T22:00:00+00:00",
         "end_event_timeISO": "2026-08-13T00:00:00+00:00"
     },
     {
-        "eventnameJSON": "Workout",
-        "begineventtimeISO": "2026-08-13T14:00:00+00:00",
+        "event_name_JSON": "Workout",
+        "begin_event_timeISO": "2026-08-13T14:00:00+00:00",
         "end_event_timeISO": "2026-08-13T15:00:00+00:00"
     },
     {
-        "eventnameJSON": "Physics 2 Lecture",
-        "begineventtimeISO": "2026-08-13T17:30:00+00:00",
+        "event_name_JSON": "Physics 2 Lecture",
+        "begin_event_timeISO": "2026-08-13T17:30:00+00:00",
         "end_event_timeISO": "2026-08-13T18:30:00+00:00"
     },
     {
-        "eventnameJSON": "Calc 3",
-        "begineventtimeISO": "2026-08-13T20:30:00+00:00",
+        "event_name_JSON": "Calc 3",
+        "begin_event_timeISO": "2026-08-13T20:30:00+00:00",
         "end_event_timeISO": "2026-08-13T21:45:00+00:00"
     },
     {
-        "eventnameJSON": "Calc 3 Assignment Due",
-        "begineventtimeISO": "2026-08-14T03:00:00+00:00",
+        "event_name_JSON": "Calc 3 Assignment Due",
+        "begin_event_timeISO": "2026-08-14T03:00:00+00:00",
         "end_event_timeISO": "2026-08-14T04:00:00+00:00"
     },
     {
-        "eventnameJSON": "Corporate Partners",
-        "begineventtimeISO": "2026-08-14T13:15:00+00:00",
+        "event_name_JSON": "Corporate Partners",
+        "begin_event_timeISO": "2026-08-14T13:15:00+00:00",
         "end_event_timeISO": "2026-08-14T15:05:00+00:00"
     },
     {
-        "eventnameJSON": "Linear Circuit Analysis",
-        "begineventtimeISO": "2026-08-14T16:00:00+00:00",
+        "event_name_JSON": "Linear Circuit Analysis",
+        "begin_event_timeISO": "2026-08-14T16:00:00+00:00",
         "end_event_timeISO": "2026-08-14T17:15:00+00:00"
     },
     {
-        "eventnameJSON": "Physics 2 Lecture",
-        "begineventtimeISO": "2026-08-14T17:30:00+00:00",
+        "event_name_JSON": "Physics 2 Lecture",
+        "begin_event_timeISO": "2026-08-14T17:30:00+00:00",
         "end_event_timeISO": "2026-08-14T18:30:00+00:00"
     },
     {
-        "eventnameJSON": "Workout",
-        "begineventtimeISO": "2026-08-14T19:00:00+00:00",
+        "event_name_JSON": "Workout",
+        "begin_event_timeISO": "2026-08-14T19:00:00+00:00",
         "end_event_timeISO": "2026-08-14T20:00:00+00:00"
     }
 ]
