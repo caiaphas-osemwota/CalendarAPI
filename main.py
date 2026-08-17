@@ -4,12 +4,15 @@ import requests
 import os
 import json
 import datetime
+import arrow
 
 load_dotenv()
 url = os.getenv("copiedURL")
 cal = Calendar(requests.get(url).text) #reads url and translates to text
 #events_it = next(iter(cal.events)) #gets one event from cal.events
 #print(dir(events_it)) #looks at applicable methods/attributes
+Day_Start_Input = arrow.get(input("What time do you want to start your day? (input as XX:XX AM/PM)"), 'h:mm A' ) #change later
+Day_End_Input = arrow.get(input("What time do you want to end your day? (input as XX:XX AM/PM)"), 'h:mm A' ) #change later
 events = cal.events
 event_list = []
 for event in events :
@@ -24,9 +27,13 @@ sorted_event_list = sorted(event_list, key=lambda event:event['begin_event_time'
 
 total_assignment_time_list = []
 freetime_list = []
+
 for i in range(0,len(sorted_event_list)-1):
     current_event = sorted_event_list[i]
     next_event = sorted_event_list[i+1]
+    current_event_day = current_event['end_event_time'].replace(hour=0, minute=0, second=0, microsecond=0)
+    Day_Start = current_event_day.shift(hours = Day_Start_Input.hour, minutes = Day_Start_Input.minute)
+    Day_End = current_event_day.shift(hours = Day_End_Input.hour, minutes = Day_End_Input.minute)
     study_time = 0 
     if "due" in current_event['event_name'].lower():
          current_assignment = current_event['event_name']
@@ -46,10 +53,12 @@ for i in range(0,len(sorted_event_list)-1):
             'study_time' : study_time
             }
          total_assignment_time_list.append(assignment_dict)
+    freetimebegin = Day_Start if i == 0 else current_event['end_event_time']
+    freetimeend = Day_End if i == len(sorted_event_list)-1 else next_event['begin_event_time']
 
     freetime = {
-        'beginfreetime' : current_event['end_event_time'],
-        'endfreetime' : next_event['begin_event_time'],
+        'beginfreetime' : freetimebegin,
+        'endfreetime' : freetimeend,
         'freetimeduration' : (next_event['begin_event_time'] - current_event['end_event_time'])
     }
     if freetime['freetimeduration'].total_seconds() < 600:
@@ -68,7 +77,7 @@ for assignment in total_assignment_time_list :
             continue
         allotted = min(remaining_study_time, block_duration) #picks smaller one of either remaining study time or block duration
         study_block = {
-            'assignment_name' : assignment['assignment_name'],
+            'assignment_name' : assignment['assignment_name'] + " " + "Study", #change naming later
             'studytimestart' : block['beginfreetime'],
             'studytimeend' : block['beginfreetime'] + datetime.timedelta(seconds = allotted) #sets alloted time to timedelta to add to date object 'endfreetime'
             }
@@ -79,7 +88,7 @@ for assignment in total_assignment_time_list :
         if block['freetimeduration'].total_seconds() <= 0:
             freetime_index += 1
 
-#DayStart = input("What time do you want to start your day? (input as XX:XX)") #change later
+#Day_Start = input("What time do you want to start your day? (input as XX:XX)") #change later
 #DayEnd = input("What time do you want to end your day? (input as XX:XX)") #change later
 #limit lookup to 5 months ahead
 #maybe add meal times?
@@ -113,3 +122,4 @@ with open("event_list.json", "w") as f:
 print(f"Total events: {len(sorted_event_list)}")
 print(f"Free time gaps found: {len(freetime_list)}")
 print(f"Assignments found: {len(total_assignment_time_list)}")
+print(Day_End_Input)
