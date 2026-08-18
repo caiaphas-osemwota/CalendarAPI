@@ -1,18 +1,15 @@
-from ics import Calendar
+from ics import Calendar, Event
 from dotenv import load_dotenv
 import requests
 import os
-import json
 import datetime
 import arrow
 
 load_dotenv()
 url = os.getenv("copiedURL")
 cal = Calendar(requests.get(url).text) #reads url and translates to text
-#events_it = next(iter(cal.events)) #gets one event from cal.events
-#print(dir(events_it)) #looks at applicable methods/attributes
-Day_Start_Input = arrow.get(input("What time do you want to start your day? (input as XX:XX AM/PM)"), 'h:mm A' ) #change later
-Day_End_Input = arrow.get(input("What time do you want to end your day? (input as XX:XX AM/PM)"), 'h:mm A' ) #change later
+Day_Start_Input = arrow.get(input("What time do you want to start your day? (input as XX:XX AM/PM)"), 'h:mm A' ) 
+Day_End_Input = arrow.get(input("What time do you want to end your day? (input as XX:XX AM/PM)"), 'h:mm A' )
 events = cal.events
 event_list = []
 for event in events :
@@ -31,8 +28,8 @@ freetime_list = []
 for i in range(0,len(sorted_event_list)-1):
     current_event = sorted_event_list[i]
     next_event = sorted_event_list[i+1]
-    current_event_day = current_event['end_event_time'].replace(hour=0, minute=0, second=0, microsecond=0)
-    Day_Start = current_event_day.shift(hours = Day_Start_Input.hour, minutes = Day_Start_Input.minute)
+    current_event_day = current_event['end_event_time'].replace(hour=0, minute=0, second=0, microsecond=0) #replace the event's time with 0
+    Day_Start = current_event_day.shift(hours = Day_Start_Input.hour, minutes = Day_Start_Input.minute) #shift current event day by inputted time
     Day_End = current_event_day.shift(hours = Day_End_Input.hour, minutes = Day_End_Input.minute)
     study_time = 0 
     if "due" in current_event['event_name'].lower():
@@ -54,72 +51,55 @@ for i in range(0,len(sorted_event_list)-1):
             }
          total_assignment_time_list.append(assignment_dict)
     freetimebegin = Day_Start if i == 0 else current_event['end_event_time']
-    freetimeend = Day_End if i == len(sorted_event_list)-1 else next_event['begin_event_time']
+    freetimeend = Day_End if i == len(sorted_event_list)-2 else next_event['begin_event_time']
 
     freetime = {
-        'beginfreetime' : freetimebegin,
-        'endfreetime' : freetimeend,
-        'freetimeduration' : (next_event['begin_event_time'] - current_event['end_event_time'])
+        'begin_freetime' : freetimebegin,
+        'end_freetime' : freetimeend,
+        'freetime_duration' : freetimeend - freetimebegin
     }
-    if freetime['freetimeduration'].total_seconds() < 600:
+    if freetime['freetime_duration'].total_seconds() < 600:
         continue
     freetime_list.append(freetime)
 study_block_list = []
 freetime_index = 0
+#MaxStudyBlockDuration = 7200 work on including breaks within study blocks
 freetime_list_copy = [dict(f) for f in freetime_list] #copies and unravels freetime_list
 for assignment in total_assignment_time_list :
     remaining_study_time = assignment['study_time']
     while remaining_study_time > 0 and freetime_index < len(freetime_list_copy):
         block = freetime_list_copy[freetime_index]
-        block_duration = block['freetimeduration'].total_seconds()
+        block_duration = block['freetime_duration'].total_seconds()
         if block_duration <= 0:
             freetime_index += 1
             continue
         allotted = min(remaining_study_time, block_duration) #picks smaller one of either remaining study time or block duration
         study_block = {
-            'assignment_name' : assignment['assignment_name'] + " " + "Study", #change naming later
-            'studytimestart' : block['beginfreetime'],
-            'studytimeend' : block['beginfreetime'] + datetime.timedelta(seconds = allotted) #sets alloted time to timedelta to add to date object 'endfreetime'
+            'study_name' : assignment['assignment_name'] + " " + "Study", #change naming later to get rid of the due
+            'study_time_start' : block['begin_freetime'],
+            'study_time_end' : block['begin_freetime'] + datetime.timedelta(seconds = allotted) #sets alloted time to timedelta to add to date object 'end_freetime'
             }
         study_block_list.append(study_block)
         remaining_study_time -= allotted
-        block['beginfreetime'] = study_block['studytimeend']
-        block['freetimeduration'] -= datetime.timedelta(seconds=allotted)
-        if block['freetimeduration'].total_seconds() <= 0:
+        block['begin_freetime'] = study_block['study_time_end']
+        block['freetime_duration'] -= datetime.timedelta(seconds=allotted)
+        if block['freetime_duration'].total_seconds() <= 0:
             freetime_index += 1
+Schedule_Calendar = Calendar()
+for each_block in study_block_list :
+    Scheduled_Study_Blocks = Event()
+    Scheduled_Study_Blocks.name = each_block['study_name']
+    Scheduled_Study_Blocks.begin = each_block['study_time_start']
+    Scheduled_Study_Blocks.end = each_block['study_time_end']
+    Schedule_Calendar.events.add(Scheduled_Study_Blocks)
+with open("my.ics", "w") as f:
+    f.write(Schedule_Calendar.serialize())
 
-#Day_Start = input("What time do you want to start your day? (input as XX:XX)") #change later
-#DayEnd = input("What time do you want to end your day? (input as XX:XX)") #change later
 #limit lookup to 5 months ahead
 #maybe add meal times?
 #MaxStudyBlockDuration = 7200
 #MinStudyBlockDuration = 1800
 
-#Scheduler
-
-
-JSON_event_list = [] #look into pulling sorted dictionary list and 
-for sorted_event in sorted_event_list:
-    JSON_event_list.append({
-        'event_name_JSON' : sorted_event['event_name'],
-        'begin_event_timeISO' : sorted_event['begin_event_time'].isoformat(),
-        'end_event_timeISO' : sorted_event['end_event_time'].isoformat()
-    })
-JSON_study_block_list = []
-for JSONstudyblock in study_block_list:
-    JSON_study_block_list.append({
-        'assignment_name_JSON' : JSONstudyblock['assignment_name'],
-        'studytimestartISO' : JSONstudyblock['studytimestart'].isoformat(),
-        'studytimeendISO' : JSONstudyblock['studytimeend'].isoformat()
-    })
-with open('study_block_list.json', 'w') as f:
-    Studying_JSON = json.dump(JSON_study_block_list, f, indent=4) # get rid of indent later on (only for readability)
-with open("event_list.json", "w") as f:
-    Classes_JSON = json.dump(JSON_event_list, f, indent=4) # get rid of indent later on (only for readability)
-#with open("event_list
-#.json", "r") as f:
-#    jsontolist = json.load(f)
 print(f"Total events: {len(sorted_event_list)}")
 print(f"Free time gaps found: {len(freetime_list)}")
 print(f"Assignments found: {len(total_assignment_time_list)}")
-print(Day_End_Input)
