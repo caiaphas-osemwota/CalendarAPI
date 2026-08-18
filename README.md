@@ -24,3 +24,40 @@ I came up with the idea while writing my own schedule before starting college, a
 - Prints scheduling statistics, including total events, free-time gaps, and assignments found
 
 ## Current Workflow
+Calendar URL
+↓
+Read Calendar Events
+↓
+Sort Events
+↓
+Identify Assignments
+↓
+Find Free Time
+↓
+Estimate Required Study Time
+↓
+Schedule Study Blocks
+↓
+Generate .ics Calendar
+
+## Technologies
+
+- Python
+- ics
+- Requests
+- python-dotenv
+- Arrow
+- iCalendar
+- Git / GitHub
+
+## Future Improvements
+
+- Improve assignment detection accuracy
+- Add configurable study durations
+- Add maximum study block lengths
+- Add scheduled breaks
+- Improve study block prioritization
+- Support more courses and assignment types (e.g., exam and test prep)
+- Automatically update the generated calendar
+- Host the generated `.ics` feed for calendar subscriptions
+- Add a user interface for scheduling preferences
