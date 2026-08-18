@@ -50,14 +50,26 @@ for i in range(0,len(sorted_event_list)-1):
             'study_time' : study_time
             }
          total_assignment_time_list.append(assignment_dict)
-    freetimebegin = Day_Start if i == 0 else current_event['end_event_time']
+    if i == 0 :
+        freetime = {
+            'begin_freetime' : Day_Start,
+            'end_freetime' : current_event['begin_event_time'],
+            'freetime_duration' : current_event['begin_event_time'] - Day_Start
+            }
+    elif i == len(sorted_event_list)-2:
+        freetime = {
+            'begin_freetime' : current_event['end_event_time'],
+            'end_freetime' : Day_End,
+            'freetime_duration' : Day_End - current_event['end_event_time']
+        }
+    else:
+        freetime = {
+            'begin_freetime' : current_event['end_event_time'],
+            'end_freetime' : next_event['begin_event_time'],
+            'freetime_duration' : current_event['end_event_time'] - next_event['begin_event_time']
+            }
+    freetimebegin = next_event['end_event_time'] if i == len(sorted_event_list)-2
     freetimeend = Day_End if i == len(sorted_event_list)-2 else next_event['begin_event_time']
-
-    freetime = {
-        'begin_freetime' : freetimebegin,
-        'end_freetime' : freetimeend,
-        'freetime_duration' : freetimeend - freetimebegin
-    }
     if freetime['freetime_duration'].total_seconds() < 600:
         continue
     freetime_list.append(freetime)
