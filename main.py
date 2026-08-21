@@ -58,18 +58,16 @@ for i in range(0,len(sorted_event_list)-1):
             }
     elif i == len(sorted_event_list)-2:
         freetime = {
-            'begin_freetime' : current_event['end_event_time'],
+            'begin_freetime' : next_event['end_event_time'],
             'end_freetime' : Day_End,
-            'freetime_duration' : Day_End - current_event['end_event_time']
+            'freetime_duration' : Day_End - next_event['end_event_time']
         }
     else:
         freetime = {
             'begin_freetime' : current_event['end_event_time'],
             'end_freetime' : next_event['begin_event_time'],
-            'freetime_duration' : current_event['end_event_time'] - next_event['begin_event_time']
+            'freetime_duration' : next_event['begin_event_time'] - current_event['end_event_time']
             }
-    freetimebegin = next_event['end_event_time'] if i == len(sorted_event_list)-2
-    freetimeend = Day_End if i == len(sorted_event_list)-2 else next_event['begin_event_time']
     if freetime['freetime_duration'].total_seconds() < 600:
         continue
     freetime_list.append(freetime)
