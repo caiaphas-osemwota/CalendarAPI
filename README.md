@@ -27,24 +27,31 @@ I came up with the idea while writing my own schedule before starting college, a
 Calendar URL
 
 ↓
+
 Read Calendar Events
 
 ↓
+
 Sort Events
 
 ↓
+
 Identify Assignments
 
 ↓
+
 Find Free Time
 
 ↓
+
 Estimate Required Study Time
 
 ↓
+
 Schedule Study Blocks
 
 ↓
+
 Generate .ics Calendar
 
 ## Technologies
