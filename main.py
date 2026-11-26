@@ -1,10 +1,20 @@
-from ics import Event #, Calendar
+from ics import Event, Calendar as IcsCalendar
 from dotenv import load_dotenv
 from icalendar import Calendar
 import requests
 import os
 import datetime
 from datetime import timedelta
+from zoneinfo import ZoneInfo
+
+Local_TZ = ZoneInfo("America/Indiana/Indianapolis")
+
+def to_local(value): # all-day events are just normal dates, floating times have no timezone
+    if not isinstance(value, datetime.datetime):
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=LOCAL_TZ)
+    return value.astimezone(LOCAL_TZ)
 
 load_dotenv()
 lecture_url = os.getenv("copiedURL")
@@ -23,8 +33,10 @@ event_list = []
 homework_list = []
 for event in cal1.walk():
     if event.name == "VEVENT":
-        eventstart = event.get("DTSTART").dt
-        eventend = event.get("DTEND").dt
+        eventstart = to_local(event.get("DTSTART").dt) 
+        if eventstart is None:
+            continue
+        eventend = to_local(event.get("DTEND").dt) if event.get("DTEND") else eventstart
         event_list.append({
             'event_name' : str(event.get('SUMMARY')),
             'begin_event_time' : eventstart,
@@ -36,8 +48,10 @@ sorted_event_list = sorted(event_list, key=lambda event:event['begin_event_time'
 
 for homework in cal2.walk():
     if homework.name == "VEVENT":
-        homeworkstart = homework.get("DTSTART").dt
-        homeworkend = homework.get("DTEND").dt
+        homeworkstart = to_local(homework.get("DTSTART").dt)
+        if homeworkstart is None:
+            continue
+        homeworkend = to_local(homework.get("DTEND").dt) if homework.get("DTEND") else homeworkstart
         homework_list.append({
             'homework_name' : str(homework.get('SUMMARY')),
             'homework_description' : str(homework.get('DESCRIPTION')),
